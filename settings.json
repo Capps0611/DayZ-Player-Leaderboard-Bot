@@ -1,0 +1,8 @@
+{
+  "token": "< BOT TOKEN HERE >",
+  "serverProfilePath": "<SERVER PROFILE NAME>/Leaderboard/",
+  "ftpHost": "< FTP HOST NAME HERE >",
+  "ftpPort": 21,
+  "ftpUser": "< FTP USER NAME HERE >",
+  "ftpPass": "< FTP USER PASS HERE >"
+}

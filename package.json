@@ -1,0 +1,17 @@
+{
+  "name": "dayz_player_leaderboard_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dayzPlayerLeaderboardBot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Capps",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.1.0",
+    "discord.js": "^11.5.1",
+    "fs": "0.0.1-security",
+    "jsftp": "^2.1.3"
+  }
+}
