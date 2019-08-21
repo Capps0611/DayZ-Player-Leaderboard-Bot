@@ -25,10 +25,7 @@ $RECYCLE.BIN/
 
 # Files
 
-settings.json
-*.json
-*.json
 *.json
 !package.json
 !package-lock.json
-settings.json
+!samplesettings.json
