@@ -1,6 +1,6 @@
 # DayZ Player Leaderboard Bot
 
-A bot that uses FTP connection to generate and display a leaderboard to a discord server using the DayZ Mod @Intenz-Leaderboard(https://steamcommunity.com/sharedfiles/filedetails/?id=1758815806)
+A bot that uses FTP connection to generate and display a leaderboard to a discord server using the DayZ Mod [@Intenz-Leaderboard](https://steamcommunity.com/sharedfiles/filedetails/?id=1758815806)
 
 
 ### Instructions
@@ -23,7 +23,7 @@ A bot that uses FTP connection to generate and display a leaderboard to a discor
     - ftpUser is the username for the FTP server
     - ftpPAss is the password for the FTP server username
 - run `npm i` to install node packages
-- Start bot with `npm start`
+- Start bot with `npm dayzPlayerLeaderboardBot.js`
 
 
 ## Discord Commands
