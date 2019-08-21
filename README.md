@@ -23,7 +23,7 @@ A bot that uses FTP connection to generate and display a leaderboard to a discor
     - ftpUser is the username for the FTP server
     - ftpPAss is the password for the FTP server username
 - run `npm i` to install node packages
-- Start bot with `npm dayzPlayerLeaderboardBot.js`
+- Start bot with `npm start`
 
 
 ## Discord Commands
