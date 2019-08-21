@@ -1,8 +1,8 @@
 {
-  "token": "< BOT TOKEN HERE >",
-  "serverProfilePath": "<SERVER PROFILE NAME>/Leaderboard/",
-  "ftpHost": "< FTP HOST NAME HERE >",
+  "token": "NjEzMDE2NDkwNTMwMzA4MTE4.XVrvTw.ri1-tTUvLp0U58LQuJUfi-DInOc",
+  "serverProfilePath": "Admin/Leaderboard/",
+  "ftpHost": "45.34.121.160",
   "ftpPort": 21,
-  "ftpUser": "< FTP USER NAME HERE >",
-  "ftpPass": "< FTP USER PASS HERE >"
+  "ftpUser": "ss78854Steven123",
+  "ftpPass": "5n1wkdwz"
 }
