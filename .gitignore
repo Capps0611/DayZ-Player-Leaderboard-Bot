@@ -31,3 +31,4 @@ settings.json
 *.json
 !package.json
 !package-lock.json
+settings.json
