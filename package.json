@@ -4,7 +4,7 @@
   "description": "",
   "main": "dayzPlayerLeaderboardBot.js",
   "scripts": {
-    "start": "nodemon dayzPlayerLeaderboardBot.js"
+    "start": "nodemon --ignore \"playerJsons/\" dayzPlayerLeaderboardBot.js"
   },
   "author": "Capps",
   "license": "ISC",
