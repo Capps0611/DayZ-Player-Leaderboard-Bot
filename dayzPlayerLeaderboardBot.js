@@ -42,7 +42,7 @@ function processCommand(receivedMessage) {
     console.log("Command received: " + primaryCommand)
     console.log("Arguments: " + arguments) // There may not be any arguments
 
-    switch (primaryCommand) {
+    switch (primaryCommand.toLowerCase()) {
       case 'help':
         helpCommand(arguments, receivedMessage)
         break;
@@ -58,9 +58,16 @@ function processCommand(receivedMessage) {
 
 function helpCommand(arguments, receivedMessage) {
     if (arguments.length > 0) {
-        receivedMessage.channel.send("It looks like you might need help with " + arguments)
-    } else {
-        receivedMessage.channel.send("I'm not sure what you need help with. Try `!help [topic]`")
+        switch (arguments[0].toLowerCase()) {
+          case 'leaderboard':
+            receivedMessage.channel.send("!leaderboard [sort Type]\n```\nValid Sort Types:\n\tdeaths\n\tplayer_kills\n\tlongest_shot\n\t\zedkills\n\tdistance_traveled\n\nExample Usage:\n\t!leaderboard player_kills```");
+            break;
+          default: receivedMessage.channel.send("I'm not sure what you need help with. Try `!help [topic]`")
+        }
+    }
+    else
+    {
+      receivedMessage.channel.send("I'm not sure what you need help with. Try `!help [topic]`")
     }
 }
 
@@ -68,19 +75,26 @@ function generateLeaderboard(arguments, receivedMessage)
 {
   fileNames = [];
   playerData = [];
-  leaderboard = ["\tRank\tDeaths\tKills\tLongest Shot\tZombie Kills\tTime Alive\tDistance Traveled"];
+  leaderboard = ["Rank\tDeaths\tKills\tLongest Shot\tZombie Kills\t\tTime Alive\t\t\tDistance Traveled","\n------------------------------------------------------------------------------------------------------\n"];
+  var finalResult = "";//"```\n";
   position = 1;
-  ftp.ls("Admin/Leaderboard",(err, res) => {
+  var args = arguments;
+  ftp.ls(settings.serverProfilePath,(err, res) => {
     res.forEach(file =>fileNames.push(file.name));
-    //console.log("\nFile Names are: "+fileNames);
-    //console.log(fileNames);
     obtainFile();
     setTimeout(function() {
      fileNames.forEach(file => compilePlayers(file));
-     sortPlayers(playerData);
+     if (args.length > 0)
+     {
+       sortPlayers(playerData,args[0].toLowerCase());
+     }
+     else
+     {
+       sortPlayers(playerData,"default");
+     }
+
      playerData.forEach(player => writeLeaderboard(player,position));
      leaderboard.forEach(entry => receivedMessage.channel.send(entry));
-     //console.log(playerData);
    }, 2000);
   });
 }
@@ -113,15 +127,58 @@ function compilePlayers(file)
 
 }
 
-function sortPlayers(list)
+function sortPlayers(list,sortType)
 {
-  list.sort((a, b) => (a.timeSurvived < b.timeSurvived) ? 1 : -1)
+  switch (sortType) {
+    case 'deaths':
+    list.sort((a, b) => (a.deaths.length > b.deaths.length) ? 1 : -1)
+      break;
+    case 'player_kills':
+      list.sort((a, b) => (a.playerKills < b.playerKills) ? 1 : -1)
+      break;
+    case 'longest_shot':
+      list.sort((a, b) => (a.longestShot < b.longestShot) ? 1 : -1)
+    break;
+    case 'zedkills':
+      list.sort((a, b) => (a.zedKills < b.zedKills) ? 1 : -1)
+    break;
+    case 'distance_traveled':
+      list.sort((a, b) => (a.distTraveled < b.distTraveled) ? 1 : -1)
+    break;
+    default: list.sort((a, b) => (a.timeSurvived < b.timeSurvived) ? 1 : -1)
+
+
+  }
 }
 
 function writeLeaderboard(player,pos)
 {
-  leaderboard.push(pos+". "+player.name+"\t\t"+player.deaths.length+"\t\t\t\t"+player.playerKills.length+"\t\t\t"+player.longestShot+"m\t\t\t\t"+player.zedKills+"\t\t\t\t"+player.timeSurvived+"secs\t\t\t\t"+player.distTraveled+"m\n");
+  leaderboard.push(pos+". "+player.name+"\t\t"+player.deaths.length+"\t\t\t\t"+player.playerKills.length+"\t\t\t"+player.longestShot+"m\t\t\t\t"+player.zedKills+"\t\t\t\t"+calculateTimeAlive(player.timeSurvived)+"\t\t\t\t"+player.distTraveled+"m\n");
   position = pos + 1;
+  leaderboard.push("------------------------------------------------------------------------------------------------------\n");
+}
+
+function calculateTimeAlive(timeAlive)
+{
+  var days = 0;
+  if (timeAlive >= 86400)
+  {
+    while (timeAlive >= 86400)
+    {
+      timeAlive = timeAlive - 86400;
+      days = days + 1;
+    }
+    var date = new Date(null);
+    date.setSeconds(timeAlive); // specify value for SECONDS here
+    var result = days+"d:"+date.toISOString().substr(11, 2)+"h:"+date.toISOString().substr(14, 2)+"m:"+date.toISOString().substr(17, 2)+"s";
+  } else
+  {
+    var date = new Date(null);
+    date.setSeconds(timeAlive); // specify value for SECONDS here
+    var result = days+"d:"+date.toISOString().substr(11, 2)+"h:"+date.toISOString().substr(14, 2)+"m:"+date.toISOString().substr(17, 2)+"s";
+  }
+
+  return result;
 }
 
 
