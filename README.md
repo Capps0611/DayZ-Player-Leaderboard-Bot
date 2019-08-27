@@ -22,6 +22,7 @@ A bot that uses FTP connection to generate and display a leaderboard to a discor
     - ftpPort is the FTP port, default is 21
     - ftpUser is the username for the FTP server
     - ftpPAss is the password for the FTP server username
+- Get and install [Node.js](https://nodejs.org/en/download/)
 - run `npm i` to install node packages
 - Start bot with `npm start`
 
