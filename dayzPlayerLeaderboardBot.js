@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
-const jsftp = require("jsftp");
+const basicFTP = require("basic-ftp")
 const Player = require("./Player.js");
 var async = require("async");
 var fs = require('fs')
@@ -11,13 +11,8 @@ var playerData = [];
 var leaderboard = [];
 var position = 1;
 
-const ftp = new jsftp({
-  host: settings.ftpHost,
-  port: settings.ftpPort, // defaults to 21
-  user: settings.ftpUser, // defaults to "anonymous"
-  pass: settings.ftpPass, // defaults to "@anonymous"
-  debugMode: true
-});
+
+const ftp = new basicFTP.Client()
 
 client.on('ready', () => {
     console.log("Connected as " + client.user.tag)
@@ -71,7 +66,7 @@ function helpCommand(arguments, receivedMessage) {
     }
 }
 
-function generateLeaderboard(arguments, receivedMessage)
+async function generateLeaderboard(arguments, receivedMessage)
 {
   fileNames = [];
   playerData = [];
@@ -79,43 +74,43 @@ function generateLeaderboard(arguments, receivedMessage)
   var finalResult = "";//"```\n";
   position = 1;
   var args = arguments;
-  ftp.ls(settings.serverProfilePath,(err, res) => {
-    res.forEach(file =>fileNames.push(file.name));
-    obtainFile();
-    setTimeout(function() {
-     fileNames.forEach(file => compilePlayers(file));
-     if (args.length > 0)
-     {
-       sortPlayers(playerData,args[0].toLowerCase());
-     }
-     else
-     {
-       sortPlayers(playerData,"default");
-     }
+  await obtainFiles();
+  setTimeout(function() {
+  fileNames.forEach(file => compilePlayers(file));
+  if (args.length > 0)
+  {
+    sortPlayers(playerData,args[0].toLowerCase());
+  }
+  else
+  {
+    sortPlayers(playerData,"default");
+  }
 
-     playerData.forEach(player => writeLeaderboard(player,position));
-     leaderboard.forEach(entry => receivedMessage.channel.send(entry));
-   }, 2000);
-  });
+  playerData.forEach(player => writeLeaderboard(player,position));
+  leaderboard.forEach(entry => receivedMessage.channel.send(entry));
+}, 1000);
 }
 
-function obtainFile()
+async function obtainFiles()
 {
-  async.eachLimit(
-    fileNames,
-    1,
-    function(file, cb) {
-        ftp.get(settings.serverProfilePath+file, "./playerJsons/"+file,function(err) {
-            if (err) return cb(err)
-        //    console.log('downloaded ' + file);
-            cb()
-        })
-    },
-    function(err) {
-        if (err) return console.log(err)
-      //  console.log('all files were downloaded');
+  try {
+    await ftp.access({
+              host: settings.ftpHost,
+              port: settings.ftpPort, // defaults to 21
+              user: settings.ftpUser, // defaults to "anonymous"
+              password: settings.ftpPass, // defaults to "@anonymous"
+              secure: false
+          })
+     ftp.ftp.verbose = true
+     await ftp.downloadToDir("./playerJsons",settings.serverProfilePath)
+     var temp = [];
+     temp = await ftp.list(settings.serverProfilePath);
+     temp.forEach(file =>fileNames.push(file.name))
+  }
+  catch(err) {
+        console.log(err)
     }
-  )
+    ftp.close();
 }
 
 function compilePlayers(file)
@@ -180,8 +175,6 @@ function calculateTimeAlive(timeAlive)
 
   return result;
 }
-
-
 
 // Get your bot's secret token from:
 // https://discordapp.com/developers/applications/
