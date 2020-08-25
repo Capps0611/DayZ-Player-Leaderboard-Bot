@@ -31,4 +31,4 @@ A bot that uses FTP connection to generate and display a leaderboard to a discor
 `!leaderboard`: Displays the leaderboard
 
 ## Error reporting
-tbd
+Please post all error reports [here](https://github.com/Capps0611/DayZ-Player-Leaderboard-Bot/issues). Be sure to include error messages and any logs!
