@@ -88,7 +88,7 @@ async function generateLeaderboard(arguments, receivedMessage)
 
   playerData.forEach(player => writeLeaderboard(player,position));
   leaderboard.forEach(entry => receivedMessage.channel.send(entry));
-}, 1000);
+}, 2000);
 }
 
 async function obtainFiles()
@@ -101,7 +101,7 @@ async function obtainFiles()
               password: settings.ftpPass, // defaults to "@anonymous"
               secure: false
           })
-     ftp.ftp.verbose = true
+     //ftp.ftp.verbose = true
      await ftp.downloadToDir("./playerJsons",settings.serverProfilePath)
      var temp = [];
      temp = await ftp.list(settings.serverProfilePath);
